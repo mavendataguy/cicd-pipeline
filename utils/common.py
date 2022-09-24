@@ -1,0 +1,5 @@
+raw_folder_path="/mnt/mavendataguy/input/ecom_growth"
+raw_folder_path_products="/mnt/mavendataguy/input/ecom_growth/products"
+raw_folder_path_sessions="/mnt/mavendataguy/input/ecom_growth/website_sessions"
+processed_folder_path="/mnt/mavendataguy/output/ecom_growth"
+presentation_folder_path = "/mnt/mavendataguy/output/present"
