@@ -1,4 +1,3 @@
-
 import json
 input_params={}
 raw_folder_path="/mnt/mavendataguy/input/ecom_growth"
