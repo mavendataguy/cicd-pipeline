@@ -16,5 +16,3 @@ with open('/mnt/mavendataguy/input/params.json','r') as fp:
   params_data=json.load(fp)
   
 print(params_data['raw_folder_path'])
-
-
