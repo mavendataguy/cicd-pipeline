@@ -18,7 +18,7 @@ df.coalesce(1).write.mode("overwrite").format('json').save('/mnt/mavendataguy/in
 import sys
 sys.path.append("/Workspace/Repos/rana.aurangzeb@hotmail.com/cicd-pipeline")
 #print(sys.path)
-
+#datetime.now().strftime("%H:%M:%S %p")
 # COMMAND ----------
 
 
