@@ -123,6 +123,7 @@ def append_log_data(logSchema,notebookName,functionName,source,target,eventDate,
         df.write.mode("overwrite").partitionBy(partition_column).format("delta").saveAsTable(f"{logSchema}.{table_name}")
         #display(spark.sql(f"create database misc OPTIMIZE {misc.test}"))
 
+=======
 # COMMAND ----------
 
 
