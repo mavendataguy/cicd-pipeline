@@ -16,18 +16,24 @@ files_path= {"products":f"{raw_folder_path}/{v_file_date}/products", "sessions.c
 # Writing configs to JSON and can be read back as well
 df = spark.read.json(sc.parallelize([input_params]))
 df.coalesce(1).write.mode("overwrite").format('json').save('/mnt/mavendataguy/input/params.json')
-config_file='/dbfs:/mnt/mavendataguy/input/params.json'
-with open(config_file,'r') as f:
-    config_data=json.load(f)
-#print(config_data)
-#json.dump(input_params,outFile)
-#outFile.close()
+
 # COMMAND ----------
 
 import sys
+import json
 sys.path.append("/Workspace/Repos/rana.aurangzeb@hotmail.com/cicd-pipeline")
 #print(sys.path)
 #datetime.now().strftime("%H:%M:%S %p")
+config_file='/dbfs/mnt/mavendataguy/bronze/config/param.json'
+with open(config_file,'w') as outFile:
+    config_data=json.dump(input_params,outFile)
+#with open(config_file,'r') as inFile:
+    #config_data=json.load(inFile)
+    #print(config_data)
+
+# COMMAND ----------
+
+# MAGIC %fs ls dbfs:/mnt/mavendataguy/input/
 
 # COMMAND ----------
 
