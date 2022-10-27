@@ -1,44 +1,35 @@
 # Databricks notebook source
 import json
-spark.conf.set("spark.databricks.delta.schema.autoMerge.enabled",True)
 input_params={}
+spark.conf.set("spark.databricks.delta.schema.autoMerge.enabled",True)
 raw_folder_path="/mnt/mavendataguy/input/ecom_growth"
-raw_folder_path_products="/mnt/mavendataguy/input/ecom_growth/products"
-raw_folder_path_sessions="/mnt/mavendataguy/input/ecom_growth/website_sessions"
-processed_folder_path="/mnt/mavendataguy/output/ecom_growth"
-presentation_folder_path = "/mnt/mavendataguy/output/present"
+processed_folder_path="/mnt/mavendataguy/silver/ecom_growth"
+#raw_folder_path_products=raw_folder_path+"/products"
+#raw_folder_path_sessions=raw_folder_path+"/website_sessions"
 v_file_date="2021-12-15"
 input_params['v_file_date']=v_file_date
 input_params['raw_folder_path']=raw_folder_path
-
-files_path= {"products":f"{raw_folder_path}/{v_file_date}/products", "sessions.csv":f"{raw_folder_path}/{v_file_date}/sessions.csv"}
+#files_path= {"products":f"{raw_folder_path}/{v_file_date}/products", "sessions.csv":f"{raw_folder_path}/{v_file_date}/sessions.csv"}
 
 # Writing configs to JSON and can be read back as well
-df = spark.read.json(sc.parallelize([input_params]))
-df.coalesce(1).write.mode("overwrite").format('json').save('/mnt/mavendataguy/input/params.json')
-config_file='/dbfs:/mnt/mavendataguy/input/params.json'
-with open(config_file,'r') as f:
-    config_data=json.load(f)
-#print(config_data)
-#json.dump(input_params,outFile)
-#outFile.close()
+#df = spark.read.json(sc.parallelize([input_params]))
+#df.coalesce(1).write.mode("overwrite").format('json').save('/mnt/mavendataguy/input/params.json')
+
 # COMMAND ----------
 
 import sys
 import json
-sys.path.append("/Workspace/Repos/rana.aurangzeb@hotmail.com/cicd-pipeline")
+#sys.path.append("/Workspace/Repos/rana.aurangzeb@hotmail.com/cicd-pipeline")
 #print(sys.path)
 #datetime.now().strftime("%H:%M:%S %p")
 config_file='/dbfs/mnt/mavendataguy/bronze/config/param.json'
 with open(config_file,'w') as outFile:
     config_data=json.dump(input_params,outFile)
+    outFile.close()
 #with open(config_file,'r') as inFile:
     #config_data=json.load(inFile)
     #print(config_data)
-
-# COMMAND ----------
-
-# MAGIC %fs ls dbfs:/mnt/mavendataguy/input/
+    #inFile.close()
 
 # COMMAND ----------
 
@@ -128,10 +119,8 @@ log_schema=StructType([
 # COMMAND ----------
 
 def append_log_data(logSchema,notebookName,functionName,source,target,eventDate,eventTime,remarks,table_name, partition_column):
-    #output_df = re_arrange_partition_column(input_df, partition_column)
     initialMessage=[{"notebookName":notebookName,"functionName":functionName,"source":source,"target":target,"eventDate":eventDate,"eventTime":eventTime,"remarks":remarks}]
     df=spark.createDataFrame(data=initialMessage,schema=logSchema)
-    #output_df.write.mode("overwrite").partitionBy(partition_column).format("parquet").saveAsTable(f"{db_name}.{table_name}")
     spark.conf.set("spark.sql.sources.partitionOverwriteMode","dynamic")
     if (spark._jsparkSession.catalog().tableExists(f"{logSchema}.{table_name}")):
         df.write.mode("append").insertInto(f"{logSchema}.{table_name}")
