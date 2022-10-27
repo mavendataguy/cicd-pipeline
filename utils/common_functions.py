@@ -25,9 +25,20 @@ with open(config_file,'r') as f:
 # COMMAND ----------
 
 import sys
+import json
 sys.path.append("/Workspace/Repos/rana.aurangzeb@hotmail.com/cicd-pipeline")
 #print(sys.path)
 #datetime.now().strftime("%H:%M:%S %p")
+config_file='/dbfs/mnt/mavendataguy/bronze/config/param.json'
+with open(config_file,'w') as outFile:
+    config_data=json.dump(input_params,outFile)
+#with open(config_file,'r') as inFile:
+    #config_data=json.load(inFile)
+    #print(config_data)
+
+# COMMAND ----------
+
+# MAGIC %fs ls dbfs:/mnt/mavendataguy/input/
 
 # COMMAND ----------
 
