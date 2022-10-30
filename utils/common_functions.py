@@ -6,12 +6,14 @@ input_params={}
 spark.conf.set("spark.databricks.delta.schema.autoMerge.enabled",True)
 raw_folder_path="/mnt/mavendataguy/input/ecom_growth"
 processed_folder_path="/mnt/mavendataguy/silver/ecom_growth"
-#raw_folder_path_products=raw_folder_path+"/products"
-#raw_folder_path_sessions=raw_folder_path+"/website_sessions"
+db_path='/mnt/mavendataguy/silver/db/ecom'
+sessions_path=db_path+'/sessions_staging'
 v_file_date="2021-12-15"
 input_params['v_file_date']=v_file_date
 input_params['raw_folder_path']=raw_folder_path
 input_params['database']="ecom"
+input_params['sessions_path']=sessions_path
+input_params['db_path']=db_path
 #files_path= {"products":f"{raw_folder_path}/{v_file_date}/products", "sessions.csv":f"{raw_folder_path}/{v_file_date}/sessions.csv"}
 
 # COMMAND ----------
