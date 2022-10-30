@@ -14,8 +14,27 @@ def create_products(db_name):
 
 # COMMAND ----------
 
+def create_sessions(db_name):
+    spark.sql(f'use {db_name} ')
+    spark.sql("""
+    create table IF NOT EXISTS sessions_staging(
+    website_session_id double,created_at timestamp ,
+    user_id int, is_repeat_session int,
+    utm_source string,
+    utm_campaign string,
+    utm_content string,
+    device_type string,
+    http_referer string,
+    year_month int,
+    file_date date,
+    ingestion_date timestamp) partitioned by (year_month)
+    """)
+
+# COMMAND ----------
+
 initialse(db_path,db_name)
 create_products(db_name)
+create_sessions(db_name)
 
 # COMMAND ----------
 
