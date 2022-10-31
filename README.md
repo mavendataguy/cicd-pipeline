@@ -36,11 +36,10 @@ https://github.com/mavendataguy/cicd-pipeline/blob/main/src/ingest_products_file
 
 Please follow below link for more details :) 
 
-Ingest Sessions File
 https://github.com/mavendataguy/cicd-pipeline/blob/main/src/ingest_sessions_file.py
 
-Common/Utility Functions
+<b>Common/Utility Functions </b>
 https://github.com/mavendataguy/cicd-pipeline/blob/main/utils/common_functions.py
 
-Database &  Table Creation Scripts
+<b>Database &  Table Creation Scripts </b>
 https://github.com/mavendataguy/cicd-pipeline/blob/main/src/prepare_etl_ecom.py
