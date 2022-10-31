@@ -32,9 +32,24 @@ def create_sessions(db_name):
 
 # COMMAND ----------
 
+def create_logs(db_name):
+    spark.sql(f'use {db_name} ')
+    spark.sql("""
+    create table IF NOT EXISTS logs(
+    notebookName string,functionName string ,
+    source string, target string,
+    eventDate date,
+    eventTime string,
+    remarks string
+    )
+    """)
+
+# COMMAND ----------
+
 initialse(db_path,db_name)
 create_products(db_name)
 create_sessions(db_name)
+create_logs(db_name)
 
 # COMMAND ----------
 

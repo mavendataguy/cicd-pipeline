@@ -29,7 +29,7 @@ sessions_schema = StructType(fields=[StructField("website_session_id", DoubleTyp
 # COMMAND ----------
 
 def transform(sessions_selected_df,v_file_date,table_path="/mnt/mavendataguy/output/ecom_growth/sessions_staging"):
-    sessions_selected_df = sessions_df.select(col("website_session_id"), col("created_at"), col("user_id"), col("is_repeat_session"), col("utm_source"), col("utm_campaign"),col("utm_content"),col("device_type"),col("http_referer"))
+    sessions_selected_df = sessions_df.select(col("website_session_id"), col("created_at"), col("user_id"),col("is_repeat_session"), col("utm_source"),col("utm_campaign"),col("utm_content"),col("device_type"),col("http_referer"))
     sessions_renamed_df = sessions_selected_df.withColumn("year_month", concat(year(sessions_selected_df.created_at),sf.format_string("%02d",month(sessions_selected_df.created_at))))\
     .withColumn("file_date", lit(v_file_date))
     #Step 4 - Add ingestion date to the dataframe
@@ -51,14 +51,24 @@ with open(config_file,'r') as inFile:
 v_file_date = dbutils.widgets.get("p_file_date")
 if __name__ == "__main__":
     # derive the path of sessions file from the baseline raw_folder_path
-    sessions_source=f"{config_data['raw_folder_path']}/website_sessions/{v_file_date}/sessions.csv"
-    sessions_df=read_file(sessions_source,sessions_schema,True,file_format="csv")
+    try:
+        sessions_source=f"{config_data['raw_folder_path']}/website_sessions/{v_file_date}/sessions.csv"
+        sessions_df=read_file(sessions_source,sessions_schema,True,file_format="csv")
+    except Exception as e:
+        append_log_data("ingest_sessions_file","read_file","sessions","session_staging",e)        
     # Pass on the destination delta table's path under Database ecom ... config_data['sessions_path']
-    sessions_final_df=transform(sessions_df,dbutils.widgets.get("p_file_date"),config_data['sessions_path'])
+    try:
+        sessions_final_df=transform(sessions_df,dbutils.widgets.get("p_file_date"),config_data['sessions_path'])
+    except Exception as e:
+        append_log_data("ingest_sessions_file","transform_data_frame","sessions","session_staging",e)    
     #Step 5 - Write data to ADLS2 as delta table under Database
-    #Although we are ingesting records using created_at date column but the partition has been created using year_month column to meet the 'minimum number of records in a partition' criteria
-    #sessions_final_df.write.mode("append").format("delta").partitionBy("year_month").save(config_data['sessions_path'])
-    sessions_final_df.coalesce(10).write.mode('append').format('delta').insertInto('ecom'+'.'+'sessions_staging')
+    #Although we are ingesting records using created_at date column but the partition has been created using year_month column
+    #to meet the 'minimum number of records (size) in a partition' criteria
+    try:
+        sessions_final_df.coalesce(10).write.mode('append').format('delta').insertInto('ecom'+'.'+'sessions_staging')
+        #sessions_final_df.write.mode("append").format("delta").partitionBy("year_month").save(config_data['sessions_path'])
+    except Exception as e:
+        append_log_data("ingest_sessions_file","write_transformed_data","sessions","session_staging",e)    
 
 # COMMAND ----------
 
