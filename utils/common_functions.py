@@ -2,6 +2,7 @@
 import json
 import sys
 from pyspark.sql.functions import current_timestamp
+from datetime import datetime,date
 input_params={}
 spark.conf.set("spark.databricks.delta.schema.autoMerge.enabled",True)
 raw_folder_path="/mnt/mavendataguy/input/ecom_growth"
@@ -93,27 +94,25 @@ def merge_delta_data(input_df, db_name, table_name, db_path,merge_condition, par
 # COMMAND ----------
 
 from pyspark.sql.types import StructField, StructType,StringType,DateType
-from datetime import datetime,date
-log_schema=StructType([
+logSchema=StructType([
     StructField('notebookName',StringType(), False),
     StructField('functionName',StringType(), False),
     StructField('source',StringType(), True),
     StructField('target',StringType(), True),
     StructField('eventDate',DateType(), False),
     StructField('eventTime',StringType(), False), #datetime.now().strftime("%H:%M:%S %p")
-    StructField('remarks',StringType(), True)  
-                               ])
+    StructField('remarks',StringType(), True)])
 
 # COMMAND ----------
 
-def append_log_data(logSchema,notebookName,functionName,source,target,eventDate,remarks,table_name, partition_column):
-    initialMessage=[{"notebookName":notebookName,"functionName":functionName,"source":source,"target":target,"eventDate":eventDate,"eventTime":datetime.now().strftime("%H:%M:%S %p"),"remarks":remarks}]
+def append_log_data(notebookName,functionName,source,target,remarks,logDb=input_params['database'],table_name="logs"):
+    initialMessage=[{"notebookName":notebookName,"functionName":functionName,"source":source,"target":target,"eventDate":current_date(),"eventTime":datetime.now().strftime("%H:%M:%S %p"),"remarks":remarks}]
     df=spark.createDataFrame(data=initialMessage,schema=logSchema)
     spark.conf.set("spark.sql.sources.partitionOverwriteMode","dynamic")
-    if (spark._jsparkSession.catalog().tableExists(f"{logSchema}.{table_name}")):
-        df.write.mode("append").insertInto(f"{logSchema}.{table_name}")
+    if (spark._jsparkSession.catalog().tableExists(f"{logDb}.{table_name}")):
+        df.write.mode("append").insertInto(f"{logDb}.{table_name}")
     else:
-        df.write.mode("overwrite").partitionBy(partition_column).format("delta").saveAsTable(f"{logSchema}.{table_name}")
+        df.write.mode("overwrite").partitionBy(partition_column).format("delta").saveAsTable(f"{logDb}.{table_name}")
         #display(spark.sql(f"create database misc OPTIMIZE {misc.test}"))
 
 # COMMAND ----------
@@ -121,10 +120,6 @@ def append_log_data(logSchema,notebookName,functionName,source,target,eventDate,
 def create_temp_view (input_map, frmt):
     for key in input_map:
         spark.read.format(frmt).option("header",True).load(input_map.get(key)).createOrReplaceTempview(key)
-
-# COMMAND ----------
-
-spark.catalog.listTables()
 
 # COMMAND ----------
 
