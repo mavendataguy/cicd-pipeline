@@ -39,7 +39,9 @@ Please follow below link for more details :)
 https://github.com/mavendataguy/cicd-pipeline/blob/main/src/ingest_sessions_file.py
 
 <b>Common/Utility Functions </b>
+
 https://github.com/mavendataguy/cicd-pipeline/blob/main/utils/common_functions.py
 
 <b>Database &  Table Creation Scripts </b>
+
 https://github.com/mavendataguy/cicd-pipeline/blob/main/src/prepare_etl_ecom.py
