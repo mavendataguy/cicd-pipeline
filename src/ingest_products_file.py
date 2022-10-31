@@ -48,10 +48,16 @@ products_path=f"{config_data['raw_folder_path']}/products/{v_file_date}/products
 if __name__ == "__main__":
     # Step 1 - Read the CSV file using the spark dataframe reader API
     # We are calling the read_file function which requires arguments like path to the file, schema and headers=True/False
-    products_df=read_file(products_path,products_schema,True,file_format="csv")
+    try:
+        products_df=read_file(products_path,products_schema,True,file_format="csv")
+    except Exception as e:
+        append_log_data("ingest_products_file","read_file","products","products_staging",e)  
     # Lets apply MERGE function on the sessions table records and insert/update based on merge condition
     # after merge operation, we are writing the data to Azure ADLS2
-    transform(products_df,config_data['db_path'],config_data['database'])
+    try:
+        transform(products_df,config_data['db_path'],config_data['database'])
+    except Exception as e:
+        append_log_data("ingest_products_file","merge_data","products","products_staging",e)        
 
 # COMMAND ----------
 
