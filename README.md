@@ -28,8 +28,7 @@ https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93e
 
 Please follow below link for more details:) 
 
-https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93eaaa8714f173bcfc/3504029184321759/3629804292616367/3012675142119230/latest.html
-
+https://github.com/mavendataguy/cicd-pipeline/blob/main/src/ingest_products_file.py
 
 <b>Website Sessions File </b>
 
@@ -37,5 +36,11 @@ https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93e
 
 Please follow below link for more details :) 
 
-https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93eaaa8714f173bcfc/3504029184321759/3629804292616406/3012675142119230/latest.html
+Ingest Sessions File
+https://github.com/mavendataguy/cicd-pipeline/blob/main/src/ingest_sessions_file.py
 
+Common/Utility Functions
+https://github.com/mavendataguy/cicd-pipeline/blob/main/utils/common_functions.py
+
+Database &  Table Creation Scripts
+https://github.com/mavendataguy/cicd-pipeline/blob/main/src/prepare_etl_ecom.py
