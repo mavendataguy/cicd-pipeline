@@ -1,6 +1,5 @@
 # Databricks notebook source
 from pyspark.sql.functions import col
-from pyspark.sql.functions import *
 from pyspark.sql.functions import lit
 from pyspark.sql import functions as sf
 from delta.tables import *
